@@ -10,6 +10,7 @@ import seedu.addressbook.commands.HelpCommand;
 import seedu.addressbook.commands.IncorrectCommand;
 import seedu.addressbook.commands.ListCommand;
 import seedu.addressbook.commands.ListSortedCommand;
+import seedu.addressbook.commands.UpdateCommand;
 import seedu.addressbook.commands.ViewAllCommand;
 import seedu.addressbook.commands.ViewCommand;
 import seedu.addressbook.data.exception.IllegalValueException;
@@ -40,6 +41,11 @@ public class Parser {
                     + " (?<isEmailPrivate>p?)e/(?<email>[^/]+)"
                     + " (?<isAddressPrivate>p?)a/(?<address>[^/]+)"
                     + "(?<tagArguments>(?: t/[^/]+)*)"); // variable number of tags
+
+    public static final Pattern UPDATE_ARGS_FORMAT = // Parameters: INDEX FIELD_TO_UPDATE NEW_VALUE
+            Pattern.compile("(?<index>\\d+)"         // Accepts only digits
+                    + " (?<fieldToUpdate>name|phone|email|address)" // Accepts only the specified parameters
+                    + " (?<newValue>\\S+(?:\\s+\\S+)*)"); // Accepts one or more keywords separated by whitespace
 
 
     /**
@@ -79,7 +85,7 @@ public class Parser {
 
         case ClearCommand.COMMAND_WORD:
             return new ClearCommand();
-
+            
         case FindCommand.COMMAND_WORD:
             return prepareFind(arguments);
 
@@ -88,6 +94,9 @@ public class Parser {
 
         case ListSortedCommand.COMMAND_WORD:
             return new ListSortedCommand();
+            
+        case UpdateCommand.COMMAND_WORD:
+            return prepareUpdate(arguments);
 
         case ViewCommand.COMMAND_WORD:
             return prepareView(arguments);
@@ -157,7 +166,6 @@ public class Parser {
         return new HashSet<>(tagStrings);
     }
 
-
     /**
      * Parses arguments in the context of the delete person command.
      *
@@ -170,6 +178,29 @@ public class Parser {
             return new DeleteCommand(targetIndex);
         } catch (ParseException | NumberFormatException e) {
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+        }
+    }
+
+    /**
+     * Parses arguments in the context of the update person command.
+     *
+     * @param args full command args string
+     * @return the prepared command
+     */
+    private Command prepareUpdate(String args) {
+        final Matcher matcher = UPDATE_ARGS_FORMAT.matcher(args.trim());
+        // Validate arg string format
+        if (!matcher.matches()) {
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateCommand.MESSAGE_USAGE));
+        }
+        try {
+            return new UpdateCommand(
+                    matcher.group("index"),
+                    matcher.group("fieldToUpdate"),
+                    matcher.group("newValue")
+            );
+        } catch (IllegalValueException ive) {
+            return new IncorrectCommand(ive.getMessage());
         }
     }
 
@@ -242,6 +273,4 @@ public class Parser {
         final Set<String> keywordSet = new HashSet<>(Arrays.asList(keywords));
         return new FindCommand(keywordSet);
     }
-
-
 }

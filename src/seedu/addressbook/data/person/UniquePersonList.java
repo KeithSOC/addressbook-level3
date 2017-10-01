@@ -1,7 +1,9 @@
 package seedu.addressbook.data.person;
 
+import seedu.addressbook.commands.UpdateCommand;
 import seedu.addressbook.common.Utils;
 import seedu.addressbook.data.exception.DuplicateDataException;
+import seedu.addressbook.data.exception.IllegalValueException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,6 +118,30 @@ public class UniquePersonList implements Iterable<Person> {
         final boolean personFoundAndDeleted = internalList.remove(toRemove);
         if (!personFoundAndDeleted) {
             throw new PersonNotFoundException();
+        }
+    }
+
+    /**
+     * Updates the equivalent person in the address book.
+     *
+     * @throws IllegalValueException if user input none of the required field
+     */
+    public void update(ReadOnlyPerson toUpdate, String field, String value) throws IllegalValueException {
+        switch (field) {
+        case "name":
+            toUpdate.setName(new Name(value));
+            break;
+        case "phone":
+            toUpdate.setPhone(new Phone(value, toUpdate.getPhone().isPrivate()));
+            break;
+        case "email":
+            toUpdate.setEmail(new Email(value, toUpdate.getEmail().isPrivate()));
+            break;
+        case "address":
+            toUpdate.setAddress(new Address(value, toUpdate.getAddress().isPrivate()));
+            break;
+        default: // Although already taken care of in parser regex, leave this here for future proofing
+            throw new IllegalValueException("Unable to update: Invalid Entry.\n" + UpdateCommand.MESSAGE_USAGE);
         }
     }
 
