@@ -9,6 +9,7 @@ import seedu.addressbook.commands.FindCommand;
 import seedu.addressbook.commands.HelpCommand;
 import seedu.addressbook.commands.IncorrectCommand;
 import seedu.addressbook.commands.ListCommand;
+import seedu.addressbook.commands.ListSortedCommand;
 import seedu.addressbook.commands.UpdateCommand;
 import seedu.addressbook.commands.ViewAllCommand;
 import seedu.addressbook.commands.ViewCommand;
@@ -76,36 +77,39 @@ public class Parser {
         final String commandWord = matcher.group("commandWord");
         final String arguments = matcher.group("arguments");
         switch (commandWord) {
-            case AddCommand.COMMAND_WORD:
-                return prepareAdd(arguments);
+        case AddCommand.COMMAND_WORD:
+            return prepareAdd(arguments);
 
-            case DeleteCommand.COMMAND_WORD:
-                return prepareDelete(arguments);
+        case DeleteCommand.COMMAND_WORD:
+            return prepareDelete(arguments);
 
-            case UpdateCommand.COMMAND_WORD:
-                return prepareUpdate(arguments);
+        case ClearCommand.COMMAND_WORD:
+            return new ClearCommand();
+            
+        case FindCommand.COMMAND_WORD:
+            return prepareFind(arguments);
 
-            case ClearCommand.COMMAND_WORD:
-                return new ClearCommand();
+        case ListCommand.COMMAND_WORD:
+            return new ListCommand();
 
-            case FindCommand.COMMAND_WORD:
-                return prepareFind(arguments);
+        case ListSortedCommand.COMMAND_WORD:
+            return new ListSortedCommand();
+            
+        case UpdateCommand.COMMAND_WORD:
+            return prepareUpdate(arguments);
 
-            case ListCommand.COMMAND_WORD:
-                return new ListCommand();
+        case ViewCommand.COMMAND_WORD:
+            return prepareView(arguments);
 
-            case ViewCommand.COMMAND_WORD:
-                return prepareView(arguments);
+        case ViewAllCommand.COMMAND_WORD:
+            return prepareViewAll(arguments);
 
-            case ViewAllCommand.COMMAND_WORD:
-                return prepareViewAll(arguments);
+        case ExitCommand.COMMAND_WORD:
+            return new ExitCommand();
 
-            case ExitCommand.COMMAND_WORD:
-                return new ExitCommand();
-
-            case HelpCommand.COMMAND_WORD: // Fallthrough
-            default:
-                return new HelpCommand();
+        case HelpCommand.COMMAND_WORD: // Fallthrough
+        default:
+            return new HelpCommand();
         }
     }
 

@@ -12,6 +12,7 @@ import seedu.addressbook.commands.FindCommand;
 import seedu.addressbook.commands.HelpCommand;
 import seedu.addressbook.commands.IncorrectCommand;
 import seedu.addressbook.commands.ListCommand;
+import seedu.addressbook.commands.ListSortedCommand;
 import seedu.addressbook.commands.UpdateCommand;
 import seedu.addressbook.commands.ViewAllCommand;
 import seedu.addressbook.commands.ViewCommand;
@@ -78,6 +79,12 @@ public class ParserTest {
     public void listCommand_parsedCorrectly() {
         final String input = "list";
         parseAndAssertCommandType(input, ListCommand.class);
+    }
+
+    @Test
+    public void listSortedCommand_parsedCorrectly() {
+        final String input = "listsorted";
+        parseAndAssertCommandType(input, ListSortedCommand.class);
     }
 
     @Test
