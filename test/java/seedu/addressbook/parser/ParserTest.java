@@ -317,7 +317,7 @@ public class ParserTest {
     }
 
     @Test
-    public void updateCommand_validArgsParsedCorrectly() {
+    public void updateCommand_validArgs_parsedCorrectly() {
         final int testIndex = 1;
         final String[] inputs = {
                 String.format("update %d %s %s", testIndex, name, Name.EXAMPLE),
